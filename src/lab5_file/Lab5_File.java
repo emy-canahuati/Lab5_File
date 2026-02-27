@@ -15,7 +15,7 @@ public class Lab5_File {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        MiCmd x=  new MiCmd();
+        GUICmd x=  new GUICmd();
     }
     
 }

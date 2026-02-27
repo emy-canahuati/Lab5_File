@@ -4,6 +4,7 @@
  */
 package lab5_file;
 
+
 import java.io.File;
 import java.awt.Component;
 import java.io.FileWriter;
@@ -280,5 +281,5 @@ public class MiCmd {
         } catch (IOException e) {
             return "Error al leer: " + e.getMessage() + "\n";
         }
-    }
-}
+    }}
+
