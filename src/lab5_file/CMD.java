@@ -8,6 +8,6 @@ package lab5_file;
  *
  * @author emyca
  */
-public class MiCmd {
+public class CMD {
     
 }
