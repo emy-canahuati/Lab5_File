@@ -32,38 +32,10 @@ public class CMD {
         return "\n"+dirActual.getAbsolutePath()+">";
     }
     
-    public String extraerParametro(String texto){
-            int inicio=texto.indexOf("<");
-            int fin=texto.indexOf(">");
-            
-            if(inicio!=-1 && fin!=-1 && fin>inicio){
-                return texto.substring(inicio+1,fin);
-            }else{
-                throw new IllegalArgumentException();
-            }
-    }
-    
     public String procesarComando(String linea, Component parent){
-        if(linea.equals("<...>")){
-            //regresar();
-            return "";
-        }
-        
-        int posicion=linea.indexOf("<");
-        
-        String comando;
-        String parametro="";
-        
-        if (posicion!=-1){
-            comando=linea.substring(0,posicion);
-            try{
-                parametro=extraerParametro(linea);
-            }catch(Exception excepcion){
-                return"Formato incorrecto, ingrese los parametros dentro de <>.\n";
-            }
-        }else{
-            comando=linea;
-        }
+        String[] partes = linea.split(" ", 2);
+        String comando = partes[0];
+        String parametro = (partes.length > 1) ? partes[1] : "";
         
         switch(comando){
             case "Mkdir":
@@ -74,20 +46,22 @@ public class CMD {
                 return Rm(parametro);
             case "Cd":
                 return Cd(parametro);
+            case "...":
+                return cmdCd("..");
             case "Dir":
                 return Dir();
             case "Date":
                 return Date();
             case "Time":
                 return Time();
-            case "Escribir":
+            case "Wr":
                 try{
-                    return Escribir(parametro);
+                    return Wr(parametro);
                 }catch(IOException excepcion){
                     return"Error al escribir: "+excepcion.getMessage();
                 }
-            case "Leer":
-                return Leer(parametro);
+            case "Rd":
+                return Rd(parametro);
             default:
                 return "Comando no reconocido.\n";
         }
@@ -131,6 +105,34 @@ public class CMD {
         return file.delete();
             
     }
+    
+    public String cmdCd(String argumento) {
+        if (argumento.isEmpty()) return "Uso: Cd <carpeta> o Cd ..\n";
+
+        if (argumento.equals("..")) {
+            File padre = dirActual.getParentFile();
+            if (padre != null && padre.exists()) {
+                dirActual = padre;
+                return "";
+            } else {
+                return "No hay carpeta padre.\n";
+            }
+        }
+
+        if (argumento.contains("..")) {
+            return "Comando no reconocido.\n";
+        }
+
+        File nueva = new File(dirActual, argumento);
+
+        if (nueva.exists() && nueva.isDirectory()) {
+            dirActual = nueva;
+            return "";
+        } else {
+            return "La carpeta no existe: " + argumento + "\n";
+        }
+    }
+    
     String Rm(String nombre){
         if(nombre.isEmpty())
             return "Use: Rm nombreDelArchivo/Carpeta\n";
@@ -195,7 +197,7 @@ public class CMD {
         return horaActual.get(Calendar.HOUR_OF_DAY)+":"+horaActual.get(Calendar.MINUTE)+":"+horaActual.get(Calendar.SECOND);
     }
     
-    public String Escribir (String nomArchivo) throws IOException{
+    public String Wr(String nomArchivo) throws IOException{
         if(nomArchivo.isEmpty()){
             return "Debe ingresar el nombre del archivo.";
         }
@@ -230,7 +232,7 @@ public class CMD {
         return "Texto guardado correctamente.\n";
     }
 
-    public String Leer(String nomArchivo) {
+    public String Rd(String nomArchivo) {
         if (nomArchivo.isEmpty()) {
             return "Debe ingresar el nombre del archivo.\n";
         }
