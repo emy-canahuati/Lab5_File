@@ -6,11 +6,9 @@ package lab5_file;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Date;
 import java.util.Calendar;
 /**
  *
@@ -102,17 +100,13 @@ public class CMD {
         
     }
     boolean borrar(File file){
-        if(file.isDirectory() && file.listFiles().length >0){
-            File[] files= file.listFiles();
-            
-            if(files!=null){
-            for(File f: files){
+        File[] files = file.listFiles();
+        if (file.isDirectory() && files != null && files.length > 0) {
+            for (File f : files) {
                 borrar(f);
             }
         }
-        }
         return file.delete();
-            
     }
     
     
@@ -121,13 +115,13 @@ public class CMD {
             return "Use: Rm nombreDelArchivo/Carpeta\n";
         File file= new File(dirActual,nombre);
         if(!file.exists())
-            return "El archivo/carpeta no exite\n";
+            return "El archivo/carpeta no existe\n";
         
         Boolean seBorro= borrar(file);
         if(seBorro)
             return "Eliminado"+ nombre+"\n";
         else
-            return "No se pudo elminar\n";
+            return "No se pudo eliminar\n";
         
     }
     public String Cd(String argumento) {
@@ -166,14 +160,14 @@ public class CMD {
         if(archivos == null || archivos.length == 0){
             return "La carpeta está vacía.\n";
         }
-        armarString.append("Contenido de ").append(dirActual.getName()).append(":\n");
+        armarString.append("Contenido de ").append(dirActual.getAbsolutePath()).append(":\n");
         for (File archivo : archivos) {
             if (archivo.isFile()) {
-                armarString.append("<FILE>");
+                armarString.append("<FILE>   ");
             } else {
-                armarString.append("<DIR>");
+                armarString.append("<DIR>    ");
             }
-            armarString.append(archivo.getName()).append("\n");
+            armarString.append("Bytes: ").append(archivo.length()).append("   ").append(archivo.getName()).append("\n");
         }
         return armarString.toString();
     }
