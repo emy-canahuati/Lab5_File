@@ -4,6 +4,8 @@
  */
 package lab5_file;
 
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author emyca
@@ -15,6 +17,9 @@ public class Lab5_File {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        SwingUtilities.invokeLater(() -> {
+            new GUICmd().setVisible(true);
+        });
     }
     
 }
