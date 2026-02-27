@@ -146,14 +146,14 @@ public class CMD {
 
         File file = new File(dirActual, nombre);
         if (!file.exists()) {
-            return "El archivo/carpeta no exite\n";
+            return "El archivo/carpeta no existe\n";
         }
 
         Boolean seBorro = borrar(file);
         if (seBorro) {
             return "Eliminado " + nombre + "\n";
         } else {
-            return "No se pudo elminar\n";
+            return "No se pudo eliminar\n";
         }
     }
 
@@ -214,7 +214,7 @@ public class CMD {
     public String Time() {
         Date hora = new Date();
         SimpleDateFormat formato = new SimpleDateFormat("HH:mm:ss");
-        return formato.format(hora);
+        return formato.format(hora+"\n");
     }
 
     public String Wr(String nomArchivo) throws IOException {
