@@ -33,6 +33,15 @@ public class CMD {
     }
     
     public String procesarComando(String linea, Component parent){
+        if (modoEscritura) {
+            if (linea.equals("EXIT")) {
+                modoEscritura = false;
+                archivoEscritura = null;
+                return "Modo escritura finalizado.\n";
+            }
+            return escribirLinea(linea);
+        }
+        
         String[] partes = linea.split(" ", 2);
         String comando = partes[0];
         String parametro = (partes.length > 1) ? partes[1] : "";
@@ -47,7 +56,7 @@ public class CMD {
             case "Cd":
                 return Cd(parametro);
             case "...":
-                return cmdCd("..");
+                return Cd("..");
             case "Dir":
                 return Dir();
             case "Date":
@@ -72,7 +81,7 @@ public class CMD {
             return "Use: Mkdir nombre\n";
         File newFolder= new File(dirActual,nombre);
         if(newFolder.exists())
-            return "El archivo ya existe\n";
+            return "La carpeta ya existe\n";
         if(newFolder.mkdir())
             return "Se creo la carpeta "+ newFolder.getName()+"\n";
         else
@@ -84,7 +93,7 @@ public class CMD {
         File newFile= new File(dirActual,nombre);
         try{
             if(newFile.createNewFile())
-                return "Se creo el archivo"+ newFile.getName()+"\n";
+                return "Se creo el archivo "+ newFile.getName()+"\n";
             else
                 return "No se pudo crear el archivo\n";
         }catch(IOException e){
@@ -106,32 +115,6 @@ public class CMD {
             
     }
     
-    public String cmdCd(String argumento) {
-        if (argumento.isEmpty()) return "Uso: Cd <carpeta> o Cd ..\n";
-
-        if (argumento.equals("..")) {
-            File padre = dirActual.getParentFile();
-            if (padre != null && padre.exists()) {
-                dirActual = padre;
-                return "";
-            } else {
-                return "No hay carpeta padre.\n";
-            }
-        }
-
-        if (argumento.contains("..")) {
-            return "Comando no reconocido.\n";
-        }
-
-        File nueva = new File(dirActual, argumento);
-
-        if (nueva.exists() && nueva.isDirectory()) {
-            dirActual = nueva;
-            return "";
-        } else {
-            return "La carpeta no existe: " + argumento + "\n";
-        }
-    }
     
     String Rm(String nombre){
         if(nombre.isEmpty())
@@ -171,25 +154,24 @@ public class CMD {
     public String Dir(){
         File [] archivos= dirActual.listFiles();
         StringBuilder armarString= new StringBuilder();
-        if(archivos!=null){
-            armarString.append("Contenido de ").append(dirActual.getName()).append(":\n");
-            for(File archivo: archivos){
-                if(archivo.isFile()){
-                    armarString.append("<FILE>");
-                }else{
-                    armarString.append("<DIR>");
-                }
-                armarString.append(archivo.getName()).append("\n");
-            }
-            return armarString.toString();
-        }else{
-            return"La carpeta esta vacia.\n";
+        if(archivos == null || archivos.length == 0){
+            return "La carpeta está vacía.\n";
         }
+        armarString.append("Contenido de ").append(dirActual.getName()).append(":\n");
+        for (File archivo : archivos) {
+            if (archivo.isFile()) {
+                armarString.append("<FILE>");
+            } else {
+                armarString.append("<DIR>");
+            }
+            armarString.append(archivo.getName()).append("\n");
+        }
+        return armarString.toString();
     }
     
     public String Date(){
         Calendar calendario= Calendar.getInstance();
-        return calendario.get(Calendar.DAY_OF_MONTH)+"/"+calendario.get(Calendar.MONTH)+"/"+calendario.get(Calendar.YEAR);
+        return calendario.get(Calendar.DAY_OF_MONTH)+"/"+(calendario.get(Calendar.MONTH)+1)+"/"+calendario.get(Calendar.YEAR);
     }
     
     public String Time(){
@@ -205,7 +187,6 @@ public class CMD {
         File archivo= new File(dirActual, nomArchivo);
         if(archivo.exists()){
             if(archivo.isFile()){
-                FileWriter escribir= new FileWriter(archivo);
                 modoEscritura=true;
                 archivoEscritura = archivo;
                 return "Escribiendo en " + nomArchivo + "...\n"
