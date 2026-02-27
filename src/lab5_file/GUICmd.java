@@ -16,7 +16,7 @@ import java.awt.event.KeyEvent;
 public class GUICmd extends JFrame {
     
     private final CMD cmd;
-    private final JtextArea consola;
+    private final JTextArea consola;
     private final JScrollPane scroll;
     private String promptConsola = "";
     
@@ -43,7 +43,7 @@ public class GUICmd extends JFrame {
     }
     
     private JTextArea crearConsola(){
-        JTextArea txt=new JtextArea();
+        JTextArea txt=new JTextArea();
         txt.setEditable(true);
         txt.setFont(new Font("Consolas", Font.BOLD, 16));
         txt.setBackground(Color.BLACK);
@@ -97,7 +97,7 @@ public class GUICmd extends JFrame {
     
     private void imprimir(String texto){
         consola.append(texto);
-        consola.setCaretPosition(consola.getDocument().length());
+        consola.setCaretPosition(consola.getDocument().getLength());
     }
     
     private void mostrarPrompt(){
