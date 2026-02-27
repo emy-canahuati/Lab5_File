@@ -101,7 +101,7 @@ public class GUICmd extends JFrame {
     }
     
     private void mostrarPrompt(){
-        promptConsola=cmd.getPrompt();
+        promptConsola=cmd.getComando();
         imprimir(promptConsola);
     }
     
