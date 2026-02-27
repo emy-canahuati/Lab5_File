@@ -130,27 +130,36 @@ public class CMD {
             return "No se pudo elminar\n";
         
     }
-    String Cd(String nombre){
-        if(nombre.isEmpty() || nombre.contains("."))
-            return "Use: Cd nombreCarpeta o Cd ;;\n";
-        if(nombre.equals(";;")){
-            File padre= dirActual.getParentFile();
-            if(padre!=null && padre.exists()){
-                dirActual=padre;
-                return "";
-            }else
-                return "No hay carpeta padre\n";
+    public String Cd(String argumento) {
+        if (argumento.isEmpty()) {
+            return "Uso: Cd <carpeta> o Cd ..\n";
         }
-        File file= new File(dirActual,nombre);
-        if(file.exists() && file.isDirectory()){
-            dirActual=file;
+
+        if (argumento.equals("..")) {
+            File padre = dirActual.getParentFile();
+            if (padre != null && padre.exists()) {
+                dirActual = padre;
+                return "";
+            } else {
+                return "No hay carpeta padre.\n";
+            }
+        }
+
+        if (argumento.contains("..")) {
+            return "Comando no reconocido.\n";
+        }
+
+        File nueva = new File(dirActual, argumento);
+
+        if (nueva.exists() && nueva.isDirectory()) {
+            dirActual = nueva;
             return "";
-        }else
-            return "La carpeta no existe";
-        
-         
+        } else {
+            return "La carpeta no existe: " + argumento + "\n";
+        }
     }
-    
+
+
     public String Dir(){
         File [] archivos= dirActual.listFiles();
         StringBuilder armarString= new StringBuilder();
