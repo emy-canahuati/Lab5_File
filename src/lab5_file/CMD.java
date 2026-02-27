@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Calendar;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -193,11 +195,11 @@ public class CMD {
         armarString.append("Contenido de ").append(dirActual.getAbsolutePath()).append(":\n");
         for (File archivo : archivos) {
             if (archivo.isFile()) {
-                armarString.append("<FILE>   ");
+                armarString.append("<FILE>   ").append(archivo.getName()).append("  (Bytes:").append(archivo.length()).append(")");
             } else {
-                armarString.append("<DIR>    ");
+                armarString.append("<DIR>    ").append(archivo.getName());
             }
-            armarString.append("Bytes: ").append(archivo.length()).append("   ").append(archivo.getName()).append("\n");
+            armarString.append("\n");
         }
         return armarString.toString();
     }
@@ -210,10 +212,9 @@ public class CMD {
     }
 
     public String Time() {
-        Calendar horaActual = Calendar.getInstance();
-        return horaActual.get(Calendar.HOUR_OF_DAY) + ":"
-                + horaActual.get(Calendar.MINUTE) + ":"
-                + horaActual.get(Calendar.SECOND) + "\n";
+        Date hora = new Date();
+        SimpleDateFormat formato = new SimpleDateFormat("HH:mm:ss");
+        return formato.format(hora);
     }
 
     public String Wr(String nomArchivo) throws IOException {
